@@ -398,7 +398,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         [self.bezelView addSubview:indicator];
     }
     else if (mode == MBProgressHUDModeDeterminate || mode == MBProgressHUDModeAnnularDeterminate) {
-        if (!isRoundIndicator || mode == MBProgressHUDModeAnnularIndeterminate) {
+        if (!isRoundIndicator) {
             // Update to determinante indicator
             [indicator removeFromSuperview];
             indicator = [[MBRoundProgressView alloc] init];
@@ -406,7 +406,10 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         }
         if (mode == MBProgressHUDModeAnnularDeterminate) {
             [(MBRoundProgressView *)indicator setAnnular:YES];
+            [(MBRoundProgressView *)indicator setIndeterminate:NO];
         }
+        
+        [indicator.layer removeAnimationForKey:@"rotationAnimation"];
     }
     else if (mode == MBProgressHUDModeAnnularIndeterminate) {
         [indicator removeFromSuperview];
@@ -891,7 +894,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     BOOL isPreiOS7 = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_7_0;
-
+    
     if (_annular) {
         // Draw background
         CGFloat lineWidth = isPreiOS7 ? 5.f : 2.f;
