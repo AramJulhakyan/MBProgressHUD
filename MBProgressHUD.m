@@ -397,7 +397,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         indicator = [[MBBarProgressView alloc] init];
         [self.bezelView addSubview:indicator];
     }
-    else if (mode == MBProgressHUDModeDeterminate || mode == MBProgressHUDModeAnnularDeterminate || mode == MBProgressHUDModeAnnularIndeterminate) {
+    else if (mode == MBProgressHUDModeDeterminate || mode == MBProgressHUDModeAnnularDeterminate) {
         if (!isRoundIndicator || mode == MBProgressHUDModeAnnularIndeterminate) {
             // Update to determinante indicator
             [indicator removeFromSuperview];
@@ -406,19 +406,23 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         }
         if (mode == MBProgressHUDModeAnnularDeterminate) {
             [(MBRoundProgressView *)indicator setAnnular:YES];
-        }else if (mode == MBProgressHUDModeAnnularIndeterminate){
-            [(MBRoundProgressView *)indicator setAnnular:YES];
-            [(MBRoundProgressView *)indicator setIndeterminate:YES];
-            
-            CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-            rotationAnimation.toValue = [NSNumber numberWithFloat: (float)(M_PI * 2.0)];
-            rotationAnimation.duration = 1;
-            rotationAnimation.cumulative = YES;
-            rotationAnimation.repeatCount = HUGE_VALF;
-            
-            [indicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
         }
-    } 
+    }
+    else if (mode == MBProgressHUDModeAnnularIndeterminate) {
+        [indicator removeFromSuperview];
+        indicator = [[MBRoundProgressView alloc] init];
+        [self.bezelView addSubview:indicator];
+        [(MBRoundProgressView *)indicator setAnnular:YES];
+        [(MBRoundProgressView *)indicator setIndeterminate:YES];
+        
+        CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.toValue = [NSNumber numberWithFloat: (float)(M_PI * 2.0)];
+        rotationAnimation.duration = 1;
+        rotationAnimation.cumulative = YES;
+        rotationAnimation.repeatCount = HUGE_VALF;
+        
+        [indicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    }
     else if (mode == MBProgressHUDModeCustomView && self.customView != indicator) {
         // Update custom view indicator
         [indicator removeFromSuperview];
