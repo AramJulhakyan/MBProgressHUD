@@ -45,6 +45,8 @@ typedef NS_ENUM(NSInteger, MBProgressHUDMode) {
     MBProgressHUDModeDeterminateHorizontalBar,
     /// Ring-shaped progress view.
     MBProgressHUDModeAnnularDeterminate,
+    /// Ring-shaped Indeterminate progress view.
+    MBProgressHUDModeAnnularIndeterminate,
     /// Shows a custom view.
     MBProgressHUDModeCustomView,
     /// Shows only labels.
@@ -346,6 +348,8 @@ NS_ASSUME_NONNULL_BEGIN
  * Display mode - NO = round or YES = annular. Defaults to round.
  */
 @property (nonatomic, assign, getter = isAnnular) BOOL annular;
+
+@property (nonatomic, assign, getter = isIndeterminate) BOOL indeterminate;
 
 @end
 

@@ -51,6 +51,7 @@
         [MBExample exampleWithTitle:@"With details label" selector:@selector(detailsLabelExample)]],
       @[[MBExample exampleWithTitle:@"Determinate mode" selector:@selector(determinateExample)],
         [MBExample exampleWithTitle:@"Annular determinate mode" selector:@selector(annularDeterminateExample)],
+        [MBExample exampleWithTitle:@"Annular indeterminate mode" selector:@selector(annularIndeterminateExample)],
         [MBExample exampleWithTitle:@"Bar determinate mode" selector:@selector(barDeterminateExample)]],
       @[[MBExample exampleWithTitle:@"Text only" selector:@selector(textExample)],
         [MBExample exampleWithTitle:@"Custom view" selector:@selector(customViewExample)],
@@ -176,6 +177,22 @@
     hud.mode = MBProgressHUDModeAnnularDeterminate;
     hud.label.text = NSLocalizedString(@"Loading...", @"HUD loading title");
 
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        // Do something useful in the background and update the HUD periodically.
+        [self doSomeWorkWithProgress];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud hideAnimated:YES];
+        });
+    });
+}
+
+- (void)annularIndeterminateExample {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    // Set the annular determinate mode to show task progress.
+    hud.mode = MBProgressHUDModeAnnularIndeterminate;
+    hud.label.text = NSLocalizedString(@"Loading...", @"HUD loading title");
+    
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         // Do something useful in the background and update the HUD periodically.
         [self doSomeWorkWithProgress];

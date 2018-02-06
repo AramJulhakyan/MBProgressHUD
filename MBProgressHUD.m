@@ -397,7 +397,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         indicator = [[MBBarProgressView alloc] init];
         [self.bezelView addSubview:indicator];
     }
-    else if (mode == MBProgressHUDModeDeterminate || mode == MBProgressHUDModeAnnularDeterminate) {
+    else if (mode == MBProgressHUDModeDeterminate || mode == MBProgressHUDModeAnnularDeterminate || mode == MBProgressHUDModeAnnularIndeterminate) {
         if (!isRoundIndicator) {
             // Update to determinante indicator
             [indicator removeFromSuperview];
@@ -406,6 +406,17 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         }
         if (mode == MBProgressHUDModeAnnularDeterminate) {
             [(MBRoundProgressView *)indicator setAnnular:YES];
+        }else if (mode == MBProgressHUDModeAnnularIndeterminate){
+            [(MBRoundProgressView *)indicator setAnnular:YES];
+            [(MBRoundProgressView *)indicator setIndeterminate:YES];
+            
+            CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+            rotationAnimation.toValue = [NSNumber numberWithFloat: (float)(M_PI * 2.0)];
+            rotationAnimation.duration = 1;
+            rotationAnimation.cumulative = YES;
+            rotationAnimation.repeatCount = HUGE_VALF;
+            
+            [indicator.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
         }
     } 
     else if (mode == MBProgressHUDModeCustomView && self.customView != indicator) {
@@ -894,7 +905,11 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         UIBezierPath *processPath = [UIBezierPath bezierPath];
         processPath.lineCapStyle = isPreiOS7 ? kCGLineCapRound : kCGLineCapSquare;
         processPath.lineWidth = lineWidth;
-        endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
+        
+        if (self.indeterminate)
+            endAngle = (0.8 * 2 * (float)M_PI) + startAngle;
+        else
+            endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
         [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
         [_progressTintColor set];
         [processPath stroke];
