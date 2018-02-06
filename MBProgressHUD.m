@@ -398,7 +398,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
         [self.bezelView addSubview:indicator];
     }
     else if (mode == MBProgressHUDModeDeterminate || mode == MBProgressHUDModeAnnularDeterminate || mode == MBProgressHUDModeAnnularIndeterminate) {
-        if (!isRoundIndicator) {
+        if (!isRoundIndicator || mode == MBProgressHUDModeAnnularIndeterminate) {
             // Update to determinante indicator
             [indicator removeFromSuperview];
             indicator = [[MBRoundProgressView alloc] init];
